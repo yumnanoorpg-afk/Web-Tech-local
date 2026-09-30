@@ -8,7 +8,7 @@
 | API Base URL | `https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}` |
 | Endpoint for current weather | `data/2.5/weather?` |
 | Authentication method | `no auth` |
-| Required query parameters | `lat=44.34&lon=10.99&appid=84c7c361501a2164ca882721aa07bcef&=' |
+| Required query parameters | `lat=44.34&lon=10.99. API key' |
 | Sample JSON response (formatted example) |
 
 
