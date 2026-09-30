@@ -41,9 +41,9 @@
 detail** |
 | API Base URL | `http://maps.openweathermap.org/maps/2.0/weather/{op}/{z}/{x}/{y}?appid={API key}` |
 | Endpoint for geocoding | `geo/1.0/direct?` |
-| Endpoint for reverse geocoding | `_______________________________` |
-| Authentication method | `_______________________________` |
-| Required query parameters | `_______________________________` |
+| Endpoint for reverse geocoding | `geo/1.0/direct?` |
+| Authentication method | `_______________` |
+| Required query parameters | `q(city name / country code)= GB-LND` |
 | Sample request with latitude/longitude | `_______________________________` |
 | Sample JSON response (formatted example) |
 
