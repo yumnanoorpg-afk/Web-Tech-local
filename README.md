@@ -1,36 +1,33 @@
 # Web-Tech local
 
 
-## Weather API (3 marks)
-
-
-| API Provider (OpenWeather) 
-| API Base URL | `https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API key}` |
-| Endpoint for current weather | `data/2.5/weather?` |
-| Authentication method | `no auth` |
-| Required query parameters | `lat=44.34&lon=10.99. API key' |
-| Sample JSON response (formatted example) |
-
-
-
+# 🚀 Space Bot API Investigation Sheet
+**Total Marks: 40**
+**TASK 1: Collect Required API Documentation**
+This investigation sheet helps you gather key technical information from the three
+APIs required for the Space Bot project: **Webex Messaging API**, **ISS Current
+Location API**, **Weather API** and a **Geocoding API** , plus the Python time
+module. Also furhter investigate the application of Web Architecture and MVC design
+pattern in development of the Bot
+---
 ## Webex Messaging API (4 marks)
 | Criteria | Details |
-| API Base URL | `_______________________________` |
-| Authentication Method | `_______________________________` |
-| Endpoint to list rooms | `_______________________________` |
-| Endpoint to get messages | `_______________________________` |
-| Endpoint to send message | `_______________________________` |
-| Required headers | `_______________________________` |
-| Sample full GET or POST request | `_______________________________` |
-
-
+|---------|---------|
+| API Base URL | `https://webexapis.com/v1` |
+| Authentication Method | `Bearer <access_token>` |
+| Endpoint to list rooms | `/rooms` |
+| Endpoint to get messages | `/messages` |
+| Endpoint to send message | `/messages` |
+| Required headers | `Authorization: Bearer <token>, Content-Type: application/json` |
+| Sample full GET or POST request | `GET rooms: curl -H "Authorization: Bearer <token>" https://webexapis.com/v1/rooms` |
+---
 ## ISS Current Location API (2 marks)
 | Criteria | Details |
 |---------|---------|
-| API Base URL | `_______________________________` |
-| Endpoint for current ISS location | `_______________________________` |
+| API Base URL | `http://api.open-notify.org` |
+| Endpoint for current ISS location | `/iss-now.json` |
 | Sample response format (example JSON) |
-```
+```json { "message": "success", "timestamp": 1596563200, "iss_position": { "latitude": "48.8584", "longitude": "2.2945" } }
 ```
 |
 ---
@@ -39,14 +36,32 @@
 |---------|---------|
 | Provider used (Choose one) | **LocationIQ / Mapbox/ OpenWeatherMap other -provide
 detail** |
-| API Base URL | `http://maps.openweathermap.org/maps/2.0/weather/{op}/{z}/{x}/{y}?appid={API key}` |
-| Endpoint for geocoding | `geo/1.0/direct?` |
-| Endpoint for reverse geocoding | `geo/1.0/direct?` |
-| Authentication method | `_______________` |
-| Required query parameters | `q(city name / country code)= GB-LND` |
-| Sample request with latitude/longitude | `_______________________________` |
+| API Base URL | `http://api.openweathermap.org/geo/1.0/direct?q={city name},{state code},{country code}&limit={limit}&appid={API key}` |
+| Endpoint for geocoding | `/geo/1.0/direct` |
+| Endpoint for reverse geocoding | `/geo/1.0/reverse` |
+| Authentication method | `key=<API_KEY>` |
+| Required query parameters | `key, q ` |
+| Sample request with latitude/longitude | `https://us1.locationiq.com/v1/reverse.php?key=YOUR_KEY&lat=51.5074&lon=-0.1278&format=json` |
 | Sample JSON response (formatted example) |
-
+```	
+json { "place_id": "12345", "lat": "51.5074", "lon": "-0.1278", "display_name": "London, UK" }
+```
+|
+---
+## Weather API (3 marks)
+| Criteria | Details |
+|---------|---------|
+| API Provider (Choose one) | **OpenWeather, OpenWeatherMap (or other – provide
+details)** |
+| API Base URL | `https://api.openweathermap.org/data/2.5` |
+| Endpoint for current weather | `/weather` |
+| Authentication method | `appid=<API_KEY>` |
+| Required query parameters | `q (city) or lat/lon, appid` |
+| Sample JSON response (formatted example) |
+```json { "weather":[{"main":"Clouds"}], "main":{"temp":289.5}, "name":"London" }
+```
+|
+---
 ## Epoch to Human Time Conversion (Python time module) (2 marks)
 | Criteria | Details |
 |---------|---------|
@@ -61,13 +76,14 @@ detail** |
 ## Extended Feature API ( 3 marks)
 | Criteria | Details |
 |---------|---------|
-| API Provider | '_________' |
-| API Base URL | `_______________________________` |
-| Endpoint | `_______________________________` |
-| Authentication method | `_______________________________` |
-| Required query parameters | `_______________________________` |
+| API Provider | 'openWeatherApi' |
+| API Base URL | `https://api.openweathermap.org/data/2.5` |
+| Endpoint | `/air_pollution` |
+| Authentication method | `appid=<API_KEY>` |
+| Required query parameters | `lat, lon, appid` |
 | Sample JSON response (formatted example) |
-```
+```	
+json { "coord": { "lon": -0.1278, "lat": 51.5074 }, "list": [ { "main": { "aqi": 2 }, "components": { "pm2_5": 4.2, "pm10": 7.1 } } ] }
 ```
 |
 ---
@@ -114,12 +130,3 @@ Reflect on your AstroBot (400 words):
 - What challenges did you face when integrating APIs?
 - What security risks did you identify and how were they handled?
 - How could your solution be improved in the future?
----
-**Tip:** Link your answers directly to your code and examples for higher marks.
-### Notes
-- Use official documentation for accuracy (e.g. developer.webex.com, locationiq.com
-or Mapbox, open-notify.org or other ISS API).
-- Be prepared to explain your findings to your instructor or demo how you retrieved
-them using tools like Postman, Curl, or Python scripts.
----
-### Total: /40
