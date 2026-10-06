@@ -3,12 +3,7 @@
 
 # 🚀 Space Bot API Investigation Sheet
 **Total Marks: 40**
-**TASK 1: Collect Required API Documentation**
-This investigation sheet helps you gather key technical information from the three
-APIs required for the Space Bot project: **Webex Messaging API**, **ISS Current
-Location API**, **Weather API** and a **Geocoding API** , plus the Python time
-module. Also furhter investigate the application of Web Architecture and MVC design
-pattern in development of the Bot
+
 ---
 ## Webex Messaging API (4 marks)
 | Criteria | Details |
