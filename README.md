@@ -8,7 +8,7 @@
 ## Webex Messaging API (4 marks)
 | Criteria | Details |
 |---------|---------|
-| API Base URL | `https://webexapis.com/v1` |
+| API Base URL | `[https://webexapis.com/v1](https://webexapis.com/v1/messages/{messageId} \)` |
 | Authentication Method | `Bearer <access_token>` |
 | Endpoint to list rooms | `/rooms` |
 | Endpoint to get messages | `/messages` |
