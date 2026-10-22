@@ -9,92 +9,107 @@ from #complete the import statement to include the datetime library
 # CONFIGURATION FUNCTIONS
 # =========================
 def get_webex_token():
-choice = input("Use hard-coded Webex token? (y/n): ").lower()
-if choice == "n":
-token = input("Enter your Webex Access Token: ")
-return f"Bearer {token}"
-else:
-return "Bearer YOUR_WEBEX_TOKEN"
+    choice = input("Use hard-coded Webex token? (y/n): ").lower()
+    if choice == "n":
+        token = input("Enter your Webex Access Token: ")
+        return f"Bearer {token}"
+    else:
+        return "Bearer YOUR_WEBEX_TOKEN"
+    
+
 def get_api_key(prompt, hardcoded_key):
 #complete the function to get the API key from user input or use a hardcoded key
+
+
 # =========================
 # WEBEX FUNCTIONS
 # =========================
 def get_rooms(token):
-url = #complete the URL to fetch rooms from Webex API
-headers = #complete the headers dictionary to include the Authorization header
-with the token
-response = #complete the request to get rooms using requests.get with the url
-and headers
-if response.status_code != #complete the condition to check if the response
-status code is not xxx:
-print("Error fetching rooms:", response.status_code)
-return []
-return response.json().get("items", [])
+    url = #complete the URL to fetch rooms from Webex API
+    headers = #complete the headers dictionary to include the Authorization header with the token
+    response = #complete the request to get rooms using requests.get with the url and headers
+    if response.status_code != #complete the condition to check if the response status code is not xxx:
+        print("Error fetching rooms:", response.status_code)
+        return []
+        return response.json().get("items", [])
+    
+    
 def print_rooms(rooms):
-for room in rooms:
-print(#complete the print statement to display the room title and id)
+    for room in rooms:
+        print(#complete the print statement to display the room title and id)
+          
+          
 def select_room(rooms):
-while True:
-name = input(#complete the input prompt to ask the user for the room name)
-for room in rooms:
-if name.lower() in room["title"].lower():
-print(#complete the print statement to confirm the selected room)
-return room["id"]
-print(#complete the print statement to indicate that the room was not
-found)
+    while True:
+        name = input(#complete the input prompt to ask the user for the room name)
+        for room in rooms:
+            if name.lower() in room["title"].lower():
+                print(#complete the print statement to confirm the selected room)
+                return room["id"]
+                print(#complete the print statement to indicate that the room was not
+            found)
+            
+            
 def get_latest_message(token, room_id):
-url = #complete the URL to fetch messages from Webex API
-params = {"roomId":#complete, "max": #complete}
-headers = #complete the headers dictionary to include the Authorization header
-with the token
-response = requests.#complete(#complete, headers=headers, params=params)
-if response.status_code != 200:
-return None, None
-data = response.json().get("items", [])
-if not data:
-return None, None
-latest = data[0]
-return latest.get("id"), latest.get("text", "")
+    url = #complete the URL to fetch messages from Webex API
+    params = {"roomId":#complete, "max": #complete}
+    headers = #complete the headers dictionary to include the Authorization header
+    with the token
+    response = requests.#complete(#complete, headers=headers, params=params)
+    
+    if response.status_code != 200:
+        return None, None
+        data = response.json().get("items", [])
+    if not data:
+        return None, None
+        
+    latest = data[0]
+    return latest.get("id"), latest.get("text", "")
+         
 def send_message(token, room_id, message):
-url = #complete the URL to send messages to Webex API
-headers = #complete the headers dictionary to include the Authorization header
-with the token and Content-Type as application/json
-data = {
-"roomId": room_id,
-"text": message
-}
-requests.#complete(url, headers=headers, data=json.dumps(data))
+    url = #complete the URL to send messages to Webex API
+    headers = #complete the headers dictionary to include the Authorization header with the token and Content-Type as application/json
+    
+    data = {
+    "roomId": room_id,
+    "text": message
+    }
+    requests.#complete(url, headers=headers, data=json.dumps(data))
+    
+    
 # =========================
 # WEATHER FUNCTIONS
 # =========================
 def get_city_coordinates(city, api_key):
-url = #complete the URL to fetch city coordinates from OpenWeatherMap API
-params = #complete the params dictionary to include the city name, limit, and
-the API key
-response = requests.#complete(url, params=params)
-if response.status_code != 200:
-return None
-data = response.json()
-return data[0] if data else None
+    url = #complete the URL to fetch city coordinates from OpenWeatherMap API
+    params = #complete the params dictionary to include the city name, limit, and
+    the API key
+    res/ponse = requests.#complete(url, params=params)
+    
+    if response.status_code != 200:
+        return None
+        data = response.json()
+        return data[0] if data else None
+        
+    
 def get_weather(city, api_key):
-location = get_city_coordinates(city, api_key)
-if not location:
-return #complete the return statement to indicate that the city was not
-found
-url = #complete the URL to fetch weather data from OpenWeatherMap API
-params = #complete the params dictionary to include the latitude, longitude,
-units as metric, and the API key
-response = requests.#complete(url, params=params)
-if response.status_code != 200:
-return #complete the return statement to indicate that the wheather weather
-data retrieved or not
-weather = response.json()
-return (
-#complete the return statement to format and return the weather information
-such as including city name, country, temperature, weather description, humidity,
-and wind speed
-)
+    location = get_city_coordinates(city, api_key)
+    
+    if not location:
+        return #complete the return statement to indicate that the city was not found
+        url = #complete the URL to fetch weather data from OpenWeatherMap API
+        params = #complete the params dictionary to include the latitude, longitude, units as metric, and the API key
+        response = requests.#complete(url, params=params)
+    if response.status_code != 200:
+        return #complete the return statement to indicate that the wheather weather
+        data retrieved or not
+        weather = response.json()
+    return (
+    #complete the return statement to format and return the weather information such as including city name, country, temperature, weather description, humidity,
+    and wind speed
+    )
+    
+    
 # =========================
 # ISS FUNCTIONS
 # =========================
@@ -103,27 +118,30 @@ url = #complete the URL to fetch reverse geocoding data from OpenWeatherMap API
 params = #complete the params dictionary to include the latitude, longitude,
 limit, and the API key
 response = requests.#complete(url, params=params)
-if response.status_code != 200:
-return None
-data = response.json()
-return data[0] if data else None
+    if response.status_code != 200:
+        return None
+        data = response.json()
+    return data[0] if data else None
+    
 def get_iss_location(api_key):
-url = #complete the URL to fetch ISS current location from the Open Notify API
-response = requests.#complete(#complete)
-if response.status_code != 200:
-return #complete the return statement to indicate whether ISS location
-retrieved or not
-data = response.json()
-lat = data[#complete][#complete]
-lon = data[#complete][#complete]
-location = reverse_geocode(lat, lon, api_key)
-place = "Over Ocean / No Nearby City"
-if location:
-place = #
+    url = #complete the URL to fetch ISS current location from the Open Notify API
+    response = requests.#complete(#complete)
+    if response.status_code != 200:
+        return #complete the return statement to indicate whether ISS location retrieved or not
+        
+    data = response.json()
+    lat = data[#complete][#complete]
+    lon = data[#complete][#complete]
+    location = reverse_geocode(lat, lon, api_key)
+    place = "Over Ocean / No Nearby City"
+    if location:
+    place = #
 return (
 #complete the return statement to format and return the ISS location
 information including latitude, longitude, and place name
 )
+
+
 # =========================
 # MAIN BOT LOGIC
 # =========================
