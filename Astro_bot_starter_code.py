@@ -8,10 +8,10 @@
 # REQUIRED LIBRARIES
 # =========================
 
-import #complete the import statement to include the requests library
-import #complete the import statement to include the json library
-import #complete the import statement to include the time library
-from #complete the import statement to include the datetime library
+import requests #complete the import statement to include the requests library
+import json #complete the import statement to include the json library
+import time #complete the import statement to include the time library
+from datetime import datetime ,timezone#complete the import statement to include the datetime library
 
 # =========================
 # CONFIGURATION FUNCTIONS
@@ -25,17 +25,20 @@ def get_webex_token():
         return "Bearer YOUR_WEBEX_TOKEN"
 
 def get_api_key(prompt, hardcoded_key):
-  #complete the function to get the API key from user input or use a hardcoded key
+    choice = input(f"Use hard-coded {prompt}? (y/n): ").lower()
+    if choice == "n":
+        return input(f"Enter your {prompt}: ").strip()
+    return hardcoded_key
 
 # =========================
 # WEBEX FUNCTIONS
 # =========================
 def get_rooms(token):
-    url = #complete the URL to fetch rooms from Webex API
-    headers = #complete the headers dictionary to include the Authorization header with the token
-    response = #complete the request to get rooms using requests.get with the url and headers
+    url = "https://webexapis.com/v1/rooms"#complete the URL to fetch rooms from Webex API
+    headers = {"Authorization": token}#complete the headers dictionary to include the Authorization header with the token
+    response = requests.get(url, headers=headers)#complete the request to get rooms using requests.get with the url and headers
 
-    if response.status_code != #complete the condition to check if the response status code is not xxx:
+    if response.status_code != 200:#complete the condition to check if the response status code is not 200:
         print("Error fetching rooms:", response.status_code)
         return []
 
