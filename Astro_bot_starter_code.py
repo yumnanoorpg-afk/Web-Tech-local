@@ -9,7 +9,7 @@
 # =========================
 
 from asyncio import timeout
-from urllib import response
+from urllib import error, response
 
 import requests #complete the import statement to include the requests library
 import json #complete the import statement to include the json library
@@ -77,32 +77,51 @@ def select_room(rooms):
 
 
 def get_latest_message(token, room_id):
-    url = #complete the URL to fetch messages from Webex API
-    params = {"roomId":#complete, "max": #complete}
-    headers = #complete the headers dictionary to include the Authorization header with the token
+    url = "https://webexapis.com/v1/messages"
+    params = {{"roomId": room_id, "max": 1}}
+    headers = {"Authorization": token}
+    
+    
+    try:
+        response = requests.get(url, headers=headers, params=params)
+        
 
-    response = requests.#complete(#complete, headers=headers, params=params)
 
-    if response.status_code != 200:
-        return None, None
+        if response.status_code != 200:
+            return None, None
 
-    data = response.json().get("items", [])
+        data = response.json().get("items", [])
 
-    if not data:
-        return None, None
+        if not data:
+            return None, None
 
-    latest = data[0]
-    return latest.get("id"), latest.get("text", "")
+        latest = data[0]
+        return latest.get("id"), latest.get("text", "")
+    
+    except requests.RequestException as error:
+            print("Error fetching latest message:", error)
+            return None, None
 
 
 def send_message(token, room_id, message):
-    url = #complete the URL to send messages to Webex API
-    headers = #complete the headers dictionary to include the Authorization header with the token and Content-Type as application/json
+    url = "https://webexapis.com/v1/messages"
+    headers = {
+        "Authorization": token,
+        "Content-Type": "application/json"
+    }
     data = {
         "roomId": room_id,
         "text": message
     }
-    requests.#complete(url, headers=headers, data=json.dumps(data))
+    try:
+        response = requests.post(url, headers=headers, data=json.dumps(data))
+        
+        if response.status_code != 200:
+            print("Error sending message:", response.status_code)
+            print("Response:", response.text)
+            
+    except requests.RequestException as error:
+        print("Unable to send message:", error)
 
 # =========================
 # WEATHER FUNCTIONS
