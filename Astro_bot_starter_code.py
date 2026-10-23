@@ -8,11 +8,8 @@
 # REQUIRED LIBRARIES
 # =========================
 
-from asyncio import timeout
-from urllib import error, response
-
-import requests #complete the import statement to include the requests library
-import json #complete the import statement to include the json library
+import requests #import statement to include the requests library
+import json #import statement to include the json library
 import time #complete the import statement to include the time library
 from datetime import datetime ,timezone#complete the import statement to include the datetime library
 
@@ -51,7 +48,9 @@ def get_api_key(prompt, hardcoded_key):
 # WEBEX FUNCTIONS
 # =========================
 
+
 def get_rooms(token):
+#Retrieves the Webex rooms accessible to the authenticated user and returns them as a list.
     url = "https://webexapis.com/v1/rooms"
     headers = {"Authorization": token}
 
@@ -70,11 +69,13 @@ def get_rooms(token):
 
 
 def print_rooms(rooms):
+#Displays the available room names and their IDs
     for room in rooms:
         print(f"Room: {room.get('title', 'Untitled')} | ID: {room.get('id')}")
 
 
 def select_room(rooms):
+#Asks the user to enter a room name and returns the matching room ID
     while True:
         name = input("Enter the room name (or part of it): ").strip()
 
@@ -88,6 +89,7 @@ def select_room(rooms):
 
 
 def get_latest_message(token, room_id):
+#Checks the selected room for its latest message and returns its ID and text.
     url = "https://webexapis.com/v1/messages"
     params = {"roomId": room_id, "max": 1}
     headers = {"Authorization": token}
@@ -115,6 +117,7 @@ def get_latest_message(token, room_id):
 
 
 def send_message(token, room_id, message):
+#Sends a message to the selected Webex room using the Webex API.
     url = "https://webexapis.com/v1/messages"
 
     headers = {
@@ -148,6 +151,7 @@ def send_message(token, room_id, message):
 # =========================
 
 def get_city_coordinates(city, api_key):
+# Uses OpenWeatherMap's geocoding API to find a city's latitude and longitude.
     url = "https://api.openweathermap.org/geo/1.0/direct"
 
     params = {
@@ -172,6 +176,7 @@ def get_city_coordinates(city, api_key):
 
 
 def get_weather(city, api_key):
+#Retrieves the current weather for a city and returns the temperature, conditions, humidity and wind speed in a readable format.
     location = get_city_coordinates(city, api_key)
 
     if not location:
@@ -221,6 +226,7 @@ def get_weather(city, api_key):
 # =========================
 
 def reverse_geocode(lat, lon, api_key):
+#Converts the ISS coordinates into a nearby place name when location data is available.
     url = "https://api.openweathermap.org/geo/1.0/reverse"
 
     params = {
@@ -245,6 +251,7 @@ def reverse_geocode(lat, lon, api_key):
 
 
 def get_iss_location(api_key):
+#Retrieves the International Space Station's current coordinates, identifies a nearby place where possible and formats the timestamp in UTC.
     url = "http://api.open-notify.org/iss-now.json"
 
     try:
@@ -300,6 +307,7 @@ def get_iss_location(api_key):
 # =========================
 
 def get_air_quality(city, api_key):
+#Retrieves air pollution data for a city, including its Air Quality Index (AQI), PM2.5 and PM10 levels. It converts the AQI number into a descriptive label, such as Good or Poor.
     location = get_city_coordinates(city, api_key)
 
     if not location:
@@ -357,6 +365,7 @@ def get_air_quality(city, api_key):
 # =========================
 
 def main():
+    #Obtains the Webex token and weather API key.
     token = get_webex_token()
 
     if not token:
@@ -371,6 +380,8 @@ def main():
     if not weather_key:
         print("Configure a valid OpenWeatherMap API key before continuing.")
         return
+    
+    #Retrieves and displays available Webex rooms, then asks the user to select one.
 
     rooms = get_rooms(token)
 
@@ -394,13 +405,13 @@ def main():
 
             print("Received message:", message_text)
 
-            # Ignore messages that are not bot commands.
+            # Ignore messages that are not bot commands and Checks the selected room for new messages every five seconds.
             if not message_text.startswith("/"):
                 time.sleep(5)
                 continue
 
             command = message_text.lower()
-
+            #lists the available commands and their descriptions when the user sends /help.
             if command == "/help":
                 send_message(
                     token,
@@ -412,13 +423,14 @@ def main():
                     "/help - Show this help message\n"
                     "/quit - Shut down AstroBot"
                 )
-
+            
+            # Calls the appropriate function for /weather, /iss or /air and sends the result back to Webex.
             elif command == "/iss":
                 send_message(
                     token, room_id, get_iss_location(weather_key)
                 )
 
-            elif command == "/quit":
+            elif command == "/quit": #sends a shutdown message to the Webex room and exits the loop, stopping the bot.
                 send_message(token, room_id, "AstroBot shutting down.")
                 break
 
