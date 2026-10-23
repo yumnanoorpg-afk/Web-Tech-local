@@ -270,6 +270,65 @@ def get_iss_location(api_key):
     except (requests.RequestException, ValueError, TypeError) as error:
         print("ISS location error:", error)
         return "An error occurred while retrieving the ISS location."
+    
+    
+    
+# =========================
+# EXTENDED FEATURE: AIR QUALITY
+# =========================
+
+def get_air_quality(city, api_key):
+    location = get_city_coordinates(city, api_key)
+
+    if not location:
+        return f"Could not find the location of {city}."
+
+    url = "https://api.openweathermap.org/data/2.5/air_pollution"
+
+    params = {
+        "lat": location["lat"],
+        "lon": location["lon"],
+        "appid": api_key
+    }
+
+    try:
+        response = requests.get(url, params=params, timeout=10)
+
+        if response.status_code != 200:
+            return "Unable to retrieve air quality data."
+
+        data = response.json()
+        items = data.get("list", [])
+
+        if not items:
+            return "No air quality data is available for this location."
+
+        result = items[0]
+        aqi = result.get("main", {}).get("aqi")
+        components = result.get("components", {})
+
+        # OpenWeatherMap AQI scale: 1 (best) to 5 (worst)
+        aqi_labels = {
+            1: "Good",
+            2: "Fair",
+            3: "Moderate",
+            4: "Poor",
+            5: "Very poor"
+        }
+
+        label = aqi_labels.get(aqi, "Unknown")
+
+        return (
+            f"Air quality for {city}\n"
+            f"Air Quality Index: {aqi} ({label})\n"
+            f"PM2.5: {components.get('pm2_5', 'N/A')} µg/m³\n"
+            f"PM10: {components.get('pm10', 'N/A')} µg/m³"
+        )
+
+    except (requests.RequestException, ValueError, KeyError) as error:
+        print("Air quality error:", error)
+        return "An error occurred while retrieving air quality data."
+
 
 # =========================
 # MAIN BOT LOGIC
