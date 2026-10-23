@@ -28,7 +28,7 @@ def get_webex_token():
         token = input("Enter your Webex Access Token: ").strip()
         return f"Bearer {token}"
     elif choice == "y":
-        return "Bearer N2Q3YTc0ZTItMjVjNy00YzUxLTg5MzEtYWE5NGYxYjc0MmUwY2JlMWI1MjMtMTJj_PE93_c18e13ae-5575-4bc0-ae01-e48905f14f17"  # Replace TToken with your actual hard-coded token
+        return "Bearer Token"  # Replace Token with your actual hard-coded token
     else:
         print("Invalid choice. Please enter 'y' or 'n'.")
         return get_webex_token()
@@ -41,7 +41,7 @@ def get_api_key(prompt, hardcoded_key):
     if choice == "n":
         return input(f"Enter your {prompt}: ").strip()
     elif choice == "y":
-        return "Bearer 666194cbf25284960e5349401a9125b3"  # Replace Api Key with your actual hard-coded API key
+        return "Bearer ApiKey"  # Replace Api Key with your actual hard-coded API key
     else:
         print("Invalid choice. Please enter 'y' or 'n'.")
         return get_api_key(prompt, hardcoded_key)
@@ -365,8 +365,8 @@ def main():
 
     weather_key = get_api_key(
         "Weather API key",
-        "666194cbf25284960e5349401a9125b3"
-    )
+        "API_KEY"  # Replace API_KEY with your actual api key
+    ) 
 
     if not weather_key:
         print("Configure a valid OpenWeatherMap API key before continuing.")
