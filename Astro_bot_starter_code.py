@@ -15,26 +15,33 @@ from datetime import datetime ,timezone#complete the import statement to include
 
 # =========================
 # CONFIGURATION FUNCTIONS
-# =========================
-def get_webex_token():
-    choice = input("Use hard-coded Webex token? (y/n): ").lower()
-    if choice == "n":
-        token = input("Enter your Webex Access Token: ")
-        return f"Bearer {token}"
-    else:
-        return "Bearer YOUR_WEBEX_TOKEN"
+# =========================#
 
+#ask the user for the Webex token or use a hard-coded token. Return the token in the format "Bearer <token>"
+def get_webex_token():
+    choice = input("Use hard-coded Webex token? (y/n): ").lower().strip()
+
+    if choice == "n":
+        token = input("Enter your Webex Access Token: ").strip()
+        return f"Bearer {token}"
+
+    return "Bearer Token"  # Replace TToken with your actual hard-coded token
+
+#ask the user for the Weather API key or use a hard-coded key. Return the key in the format "Bearer <key>"
 def get_api_key(prompt, hardcoded_key):
-    choice = input(f"Use hard-coded {prompt}? (y/n): ").lower()
+    choice = input(f"Use hard-coded {prompt}? (y/n): ").lower().strip()
+
     if choice == "n":
         return input(f"Enter your {prompt}: ").strip()
-    return hardcoded_key
+
+    return "Bearer Api Key"  # Replace Api Key with your actual hard-coded API key
+
 
 # =========================
 # WEBEX FUNCTIONS
 # =========================
 def get_rooms(token):
-    url = "https://webexapis.com/v1/rooms"#complete the URL to fetch rooms from Webex API
+    url = "https://webexapis.com/v1/rooms"#URL to fetch rooms from Webex API
     headers = {"Authorization": token}#complete the headers dictionary to include the Authorization header with the token
     response = requests.get(url, headers=headers)#complete the request to get rooms using requests.get with the url and headers
 
