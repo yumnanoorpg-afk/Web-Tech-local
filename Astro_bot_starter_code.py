@@ -8,6 +8,9 @@
 # REQUIRED LIBRARIES
 # =========================
 
+from asyncio import timeout
+from urllib import response
+
 import requests #complete the import statement to include the requests library
 import json #complete the import statement to include the json library
 import time #complete the import statement to include the time library
@@ -42,29 +45,35 @@ def get_api_key(prompt, hardcoded_key):
 # =========================
 def get_rooms(token):
     url = "https://webexapis.com/v1/rooms"#URL to fetch rooms from Webex API
-    headers = {"Authorization": token}#complete the headers dictionary to include the Authorization header with the token
-    response = requests.get(url, headers=headers)#complete the request to get rooms using requests.get with the url and headers
+    headers = {"Authorization": token}
+    try:
+        response = requests.get(url, headers=headers,timeout=10)#complete the request to get rooms using requests.get with the url and headers
+        if response.status_code != 200:#complete the condition to check if the response status code is not 200:
+                print("Error fetching rooms:", response.status_code)
+                return []
 
-    if response.status_code != 200:#complete the condition to check if the response status code is not 200:
-        print("Error fetching rooms:", response.status_code)
+        return response.json().get("items", [])
+    except requests.exceptions.RequestException as error:
+        print("Error fetching rooms:", ValueError)
         return []
-
-    return response.json().get("items", [])
+    
 
 
 def print_rooms(rooms):
     for room in rooms:
-        print(#complete the print statement to display the room title and id)
+        print(f"Room: {room.get('title', 'Untitled')} | ID: {room.get('id')}")
 
 
 def select_room(rooms):
     while True:
-        name = input(#complete the input prompt to ask the user for the room name)
+        name = input("Enter the room name (or part of it): ").strip()
         for room in rooms:
             if name.lower() in room["title"].lower():
-                print(#complete the print statement to confirm the selected room)
+                print(f"Room selected: {room.get('title', 'Untitled')} | ID: {room.get('id')}")
                 return room["id"]
-        print(#complete the print statement to indicate that the room was not found)
+            
+        print("Room not found. Please try again.")
+        select_room(rooms)
 
 
 def get_latest_message(token, room_id):
