@@ -47,8 +47,8 @@ def get_rooms(token):
     url = "https://webexapis.com/v1/rooms"#URL to fetch rooms from Webex API
     headers = {"Authorization": token}
     try:
-        response = requests.get(url, headers=headers,timeout=10)#complete the request to get rooms using requests.get with the url and headers
-        if response.status_code != 200:#complete the condition to check if the response status code is not 200:
+        response = requests.get(url, headers=headers,timeout=10)
+        if response.status_code != 200:
                 print("Error fetching rooms:", response.status_code)
                 return []
 
@@ -127,36 +127,72 @@ def send_message(token, room_id, message):
 # WEATHER FUNCTIONS
 # =========================
 def get_city_coordinates(city, api_key):
-    url = #complete the URL to fetch city coordinates from OpenWeatherMap API
-    params = #complete the params dictionary to include the city name, limit, and the API key
-    response = requests.#complete(url, params=params)
+    url = "https://api.openweathermap.org/geo/1.0/direct"
 
-    if response.status_code != 200:
+    params = {
+        "q": city,
+        "limit": 1,
+        "appid": api_key
+    }
+
+    try:
+        response = requests.get(url, params=params, timeout=10)
+
+        if response.status_code != 200:
+            print("Geocoding error:", response.status_code)
+            return None
+
+        data = response.json()
+        return data[0] if data else None
+
+    except (requests.RequestException, ValueError) as error:
+        print("Unable to find city coordinates:", error)
         return None
-
-    data = response.json()
-    return data[0] if data else None
 
 
 def get_weather(city, api_key):
     location = get_city_coordinates(city, api_key)
 
     if not location:
-        return #complete the return statement to indicate that the city was not found
+        return f"Could not find weather information for {city}."
 
-    url = #complete the URL to fetch weather data from OpenWeatherMap API
-    params = #complete the params dictionary to include the latitude, longitude, units as metric, and the API key
+    url = "https://api.openweathermap.org/data/2.5/weather"
 
-    response = requests.#complete(url, params=params)
+    params = {
+        "lat": location["lat"],
+        "lon": location["lon"],
+        "units": "metric",
+        "appid": api_key
+    }
 
-    if response.status_code != 200:
-        return #complete the return statement to indicate that the wheather weather data retrieved or not
+    try:
+        response = requests.get(url, params=params, timeout=10)
 
-    weather = response.json()
+        if response.status_code != 200:
+            return "Unable to retrieve weather data at the moment."
 
-    return (
-        #complete the return statement to format and return the weather information such as including city name, country, temperature, weather description, humidity, and wind speed
-    )
+        weather = response.json()
+
+        city_name = weather.get("name", city)
+        country = weather.get("sys", {}).get("country", "")
+        temperature = weather.get("main", {}).get("temp", "N/A")
+        description = (
+            weather.get("weather", [{}])[0].get("description", "Unknown")
+        )
+        humidity = weather.get("main", {}).get("humidity", "N/A")
+        wind_speed = weather.get("wind", {}).get("speed", "N/A")
+
+        return (
+            f"Weather for {city_name}, {country}\n"
+            f"Temperature: {temperature}°C\n"
+            f"Conditions: {description}\n"
+            f"Humidity: {humidity}%\n"
+            f"Wind speed: {wind_speed} m/s"
+        )
+
+    except (requests.RequestException, ValueError, KeyError) as error:
+        print("Weather error:", error)
+        return "An error occurred while retrieving weather information."
 
 # =========================
 # ISS FUNCTIONS
