@@ -198,41 +198,78 @@ def get_weather(city, api_key):
 # ISS FUNCTIONS
 # =========================
 def reverse_geocode(lat, lon, api_key):
-    url = #complete the URL to fetch reverse geocoding data from OpenWeatherMap API
-    params = #complete the params dictionary to include the latitude, longitude, limit, and the API key
+    url = "https://api.openweathermap.org/geo/1.0/reverse"
 
-    response = requests.#complete(url, params=params)
+    params = {
+        "lat": lat,
+        "lon": lon,
+        "limit": 1,
+        "appid": api_key
+    }
 
-    if response.status_code != 200:
+    try:
+        response = requests.get(url, params=params, timeout=10)
+
+        if response.status_code != 200:
+            return None
+
+        data = response.json()
+        return data[0] if data else None
+
+    except (requests.RequestException, ValueError) as error:
+        print("Reverse geocoding error:", error)
         return None
-
-    data = response.json()
-    return data[0] if data else None
 
 
 def get_iss_location(api_key):
-    url = #complete the URL to fetch ISS current location from the Open Notify API
+    url = "http://api.open-notify.org/iss-now.json"
 
-    response = requests.#complete(#complete)
+    try:
+        response = requests.get(url, timeout=10)
 
-    if response.status_code != 200:
-        return #complete the return statement to indicate whether ISS location retrieved or not
+        if response.status_code != 200:
+            return "Unable to retrieve the ISS location at the moment."
 
-    data = response.json()
+        data = response.json()
 
-    lat = data[#complete][#complete]
-    lon = data[#complete][#complete]
+        if data.get("message") != "success":
+            return "The ISS API did not return a successful response."
 
-    location = reverse_geocode(lat, lon, api_key)
+        position = data.get("iss_position", {})
+        lat = position.get("latitude")
+        lon = position.get("longitude")
 
-    place = "Over Ocean / No Nearby City"
+        if lat is None or lon is None:
+            return "The ISS location data is incomplete."
 
-    if location:
-        place = #
+        location = reverse_geocode(lat, lon, api_key)
 
-    return (
-        #complete the return statement to format and return the ISS location information including latitude, longitude, and place name
-    )
+        place = "Over ocean / no nearby city"
+
+        if location:
+            place = location.get("name") or location.get(
+                "state"
+            ) or location.get("country") or place
+
+        timestamp = data.get("timestamp")
+        time_text = ""
+
+        if timestamp is not None:
+            time_text = datetime.fromtimestamp(
+                int(timestamp), timezone.utc
+            ).strftime("%Y-%m-%d %H:%M:%S UTC")
+
+        return (
+            "Current ISS location\n"
+            f"Latitude: {lat}\n"
+            f"Longitude: {lon}\n"
+            f"Nearest identified place: {place}\n"
+            f"Timestamp: {time_text or 'Unavailable'}"
+        )
+
+    except (requests.RequestException, ValueError, TypeError) as error:
+        print("ISS location error:", error)
+        return "An error occurred while retrieving the ISS location."
 
 # =========================
 # MAIN BOT LOGIC
